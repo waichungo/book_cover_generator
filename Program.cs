@@ -1,5 +1,9 @@
 ﻿
 
+using UglyToad.PdfPig;
+using UglyToad.PdfPig.Content;
+using VersOne.Epub;
+
 Program.Start();
 
 public partial class Program
@@ -24,12 +28,41 @@ public partial class Program
 
                 foreach (var file in files)
                 {
-                    var isPdf = file.ToLower().EndsWith(".pdf");
-                    if (isPdf)
+                    try
                     {
-                        
+                        var isPdf = file.ToLower().EndsWith(".pdf");
+                        var targetImage = Path.Combine(targetThumbFolder, Path.GetFileNameWithoutExtension(file) + ".jpg");
+                        if (isPdf)
+                        {
+                            using (PdfDocument document = PdfDocument.Open(file))
+                            {
+                                var pages = document.GetPages();
+                                if (pages.Count() > 5)
+                                {
+                                    pages = pages.Take(5);
+                                }
+                                foreach (Page page in pages)
+                                {
+                                    var images = page.GetImages();
+                                    if (images.Count() > 0)
+                                    {
+                                        var image = images.OrderByDescending(e => e.WidthInSamples).First();
+                                        File.WriteAllBytes(targetImage, image.RawBytes.ToArray());
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            var epub = EpubReader.ReadBook(file);
+                            var cover = epub.CoverImage;
+                            if (cover != null && cover.Length > 0)
+                            {
+                                File.WriteAllBytes(targetImage, cover);
+                            }
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
 
                     }
