@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="QuestPDF" Version="2023.4.2" />
     <PackageReference Include="VersOne.Epub" Version="3.2.0" />
   </ItemGroup>
 
