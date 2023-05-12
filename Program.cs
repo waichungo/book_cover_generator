@@ -13,7 +13,7 @@ public partial class Program
         var args = Environment.GetCommandLineArgs();
         if (args.Length > 1)
         {
-            var folderToParseBooks = args[0];
+            var folderToParseBooks = args[1];
             if (Directory.Exists(folderToParseBooks))
             {
                 var targetThumbFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "thumbnails");
